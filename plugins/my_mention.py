@@ -8,7 +8,6 @@ import requests
 import urllib.request as req
 import sys
 import json
-from bs4 import BeautifulSoup
 
 # @respond_to('string')     bot宛のメッセージ
 #                           stringは正規表現が可能 「r'string'」
@@ -29,13 +28,9 @@ from bs4 import BeautifulSoup
 
 # .*でどんなメッセージでも受け付ける状態
 # respond_toで指定してもいいし、中でif message=xxx と分岐してもいい
-@respond_to('(.*)')
-def mention_func(message, args):
-    ret = get_chien_info(args)
-
-    print(ret)
-    print(type(ret))
-    message.reply(ret) # メンション
+@respond_to("天気")
+def mention_func(message):
+    message.reply("ここは東京です") # メンション
 
 
 
