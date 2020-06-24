@@ -1,3 +1,2 @@
 slackbot
-beautifulsoup4
-lxml
+requests
