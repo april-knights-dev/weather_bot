@@ -10,37 +10,87 @@ import requests
 import urllib.request as req
 import sys
 import json
+import pprint
+import re
+import datetime
 
-city_name = "Tokyo" # 主要な都市名はいけるっぽい。
-API_KEY = "e2b220b4263af8d026cb5e44abd8f568" # xxxに自分のAPI Keyを入力。
-api = "http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={key}&lang=ja"
-
-url = api.format(city = city_name, key = API_KEY)
-print(url)
-response = requests.get(url)
-data = response.json()
-jsonText = json.dumps(data, indent=4)
-print(jsonText)
+API_KEY = "e2b220b4263af8d026cb5e44abd8f568" # xxxに自分のAPI_Keyを入力。
 
 
-res_api = json.loads(jsonText)
-#mainから取得
-res_main = res_api.get("main")
-res_pressure = res_main.get("pressure")
-res_temp = res_main.get("temp")
-#weatherから取得
-res_weather = res_api.get("weather")
-res_weatherlist = res_weather[0]
-res_description = res_weatherlist.get("description")
-res_mark = res_weatherlist.get("main")
-#その他res_apiから取得
-res_cityname = res_api.get("name")
-res_timezone = res_api.get("dt")
+@listen_to('(.*)')
+def reply_weather(message, arg):
 
-main_weather ={ "Rain":"雨",  "clear sky":"晴", "Thunderstorm":"雷雨", "Drizzle":"霧雨", "Snow":"雪", 
-"Mist":"かすみ", "Smoke":"煙", "Haze":"もや", "Dust":"ほこり", "Fog":"きり", "Sand":"砂ぼこり", "Ash":"火山灰", 
-"Squall":"嵐", "Tornado":"竜巻"}
-main_weather[res_mark] 
+    if re.search('^天気', arg) is None:
+        return
+
+    if "千葉" in arg:
+        city_name = "Chiba"
+        city = "千葉"
+    elif "埼玉" in arg:
+        city_name = "Saitama"
+        city = "埼玉"
+    elif "茨城" in arg:
+        city_name = "Ibaraki"
+        city = "茨城"
+    elif "群馬" in arg:
+        city_name = "Gunma"
+        city = "群馬"
+    elif "山梨" in arg:
+        city_name = "Yamanashi"
+        city = "山梨"
+    elif "神奈川" in arg:
+        city_name = "Kanagawa"
+        city = "神奈川"
+    elif "栃木" in arg:
+        city_name = "Tochigi"
+        city = "栃木"
+    else:
+        city_name ="Tokyo"
+        city = "東京"
+
+    # city_nameで指定した地域のお天気結果取得
+    res_api = get_api_response(city_name)
+    pprint.pprint(res_api)
+
+
+    #mainから取得
+    res_main = res_api.get("main")
+    #res_pressure = res_main.get("pressure")
+    res_temp = res_main.get("temp")
+
+    #weatherから取得
+    res_weather = res_api.get("weather")
+    res_weatherlist = res_weather[0]
+    res_mark = res_weatherlist.get("main")
+
+    #その他res_apiから取得
+    # res_timezone = res_api.get("dt")
+
+    date_time = datetime.date.today()
+
+    #英語をそれぞれ日本語にしてくれる辞書
+    main_weather ={"Rain":"雨が降ってますね・・・",  "clear sky":"晴れてますよ！！良いぞ", "Thunderstorm":"雷と雨が襲来てます", "Drizzle":"霧雨、防水にお気をつけ下さい", "Snow":"・・・？！雪が降っている？！", 
+ "Mist":"かすんでます", "Smoke":"けむいですご注意ください", "Haze":"もやもや気味です", "Dust":"ほこりっぽいです", "Fog":"きりだぁああああ前方注意", "Sand":"砂ぼこりが舞ってます！！僕も舞います", "Ash":"火山灰が降ってます！！お逃げの準備を", 
+ "Squall":"嵐のコンサートですよ", "Tornado":"竜巻が来日してます", "Clouds":"曇ってますけど僕の心は晴れてます"}
+
+    # main_weather[res_mark]
+
+    if main_weather.get(res_mark):
+        res_mark = main_weather.get(res_mark)
+    else:
+        res_mark = f"設定辞書に{res_mark}が含まれてないみたいだよ"
+    
+    if "天気" in arg:
+        message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n平均気温は{res_temp}度です！！！") 
+
+
+def get_api_response(city):
+  request_url = f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={API_KEY}&lang=ja"
+
+  response = requests.get(request_url)
+  data = response.json()
+
+  return data
 
 # 辞書型の中身の取り出し方
 # dict["key_name"] or dict.get("key_name")
@@ -66,11 +116,7 @@ main_weather[res_mark]
 
 # .*でどんなメッセージでも受け付ける状態
 # respond_toで指定してもいいし、中でif message=xxx と分岐してもいい
-@listen_to("^天気")
-def mention_func(message):
- message.reply(f"\n{datetime.fromtimestamp(res_timezone)}の{res_cityname}は{main_weather[res_mark]}です。\n平均気温は{res_temp}度で、{res_description}です") # メンション
-# @listen_to('リッスン')
+
 # def listen_func(message):
 #     message.send('誰かがリッスンと投稿したようだ')      # ただの投稿
 #     message.reply('君だね？')
-
