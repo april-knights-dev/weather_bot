@@ -98,7 +98,7 @@ def reply_weather(message, arg):
         res_mark = f"設定辞書に{res_mark}が含まれてないみたいだよ"
     
     if "天気" in arg:
-        message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n平均気温は{res_temp}度です！！！") 
+        message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！{emoji}\n平均気温は{res_temp}度です！！！") 
 
 
 def get_api_response(city):
