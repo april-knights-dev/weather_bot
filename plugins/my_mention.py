@@ -64,15 +64,15 @@ def reply_weather(message, arg):
     res_mark = res_weatherlist.get("main")
 
     #rainから降水量を取得
-    res_rain = res_api.get("rain")
-    res_rainlist = res_rain[2]
-    res_rain_today = res_rainlist.get("today")
-    if (res_rain_today == 0.0):
-        print("傘いらない")
-    elif (res_rain_today >= 1.0):
-        print("傘ないとずぶ濡れ")
-    else:
-        print("小雨だから気合いでいけるかも")
+    # res_rain = res_api.get("rain")
+    # res_rainlist = res_rain[2]
+    # res_rain_today = res_rainlist.get("today")
+    # if (res_rain_today == 0.0):
+    #     print("傘いらない")
+    # elif (res_rain_today >= 1.0):
+    #     print("傘ないとずぶ濡れ")
+    # else:
+    #    print("小雨だから気合いでいけるかも")
     
     #お天気マーク
     #emoji = main_weather.get(res_mark)
