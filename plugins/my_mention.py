@@ -63,13 +63,30 @@ def reply_weather(message, arg):
     res_weatherlist = res_weather[0]
     res_mark = res_weatherlist.get("main")
 
+    #rainから降水量を取得
+    res_rain = res_api.get("rain")
+    res_rainlist = res_rain[0]
+    res_rain_today = res_rainlist.get("description")
+    if (res_rain_today == 0.0):
+        print("傘いらない")
+    elif (res_rain_today >= 1.0):
+        print("傘ないとずぶ濡れ")
+    else:
+        print("小雨だから気合いでいけるかも")
+    
+    #お天気マーク
+    emoji = res_mark
+    emoji ={"Rain":":umbrella:",  "clear sky":":sunny:", "Thunderstorm":":pika:", "Drizzle":":shower:", "Snow":":snowflake:", 
+ "Mist":":new_moon_with_face:", "Smoke":":yosi:", "Haze":":hotsprings:", "Dust":":mask:", "Fog":":dash:", "Sand":":camel:", "Ash":":volcano:", 
+ "Squall":":ocean:", "Tornado":":cycrone:", "Clouds":":cloud:"}
+
     #その他res_apiから取得
     # res_timezone = res_api.get("dt")
 
     date_time = datetime.date.today()
 
     #英語をそれぞれ日本語にしてくれる辞書
-    main_weather ={"Rain":"雨が降ってますね・・・",  "clear sky":"晴れてますよ！！良いぞ", "Thunderstorm":"雷と雨が襲来てます", "Drizzle":"霧雨、防水にお気をつけ下さい", "Snow":"・・・？！雪が降っている？！", 
+    main_weather ={"Rain":"雨が降ってますね・・・",  "clear sky":"晴れてますよ！！良いぞ", "Thunderstorm":"雷と雨が襲来します", "Drizzle":"霧雨、防水にお気をつけ下さい", "Snow":"・・・？！雪が降っている？！", 
  "Mist":"かすんでます", "Smoke":"けむいですご注意ください", "Haze":"もやもや気味です", "Dust":"ほこりっぽいです", "Fog":"きりだぁああああ前方注意", "Sand":"砂ぼこりが舞ってます！！僕も舞います", "Ash":"火山灰が降ってます！！お逃げの準備を", 
  "Squall":"嵐のコンサートですよ", "Tornado":"竜巻が来日してます", "Clouds":"曇ってますけど僕の心は晴れてます"}
 
