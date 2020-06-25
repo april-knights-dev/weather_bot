@@ -65,8 +65,8 @@ def reply_weather(message, arg):
 
     #rainから降水量を取得
     res_rain = res_api.get("rain")
-    res_rainlist = res_rain[0]
-    res_rain_today = res_rainlist.get("description")
+    res_rainlist = res_rain[2]
+    res_rain_today = res_rainlist.get("today")
     if (res_rain_today == 0.0):
         print("傘いらない")
     elif (res_rain_today >= 1.0):
@@ -75,10 +75,10 @@ def reply_weather(message, arg):
         print("小雨だから気合いでいけるかも")
     
     #お天気マーク
-    emoji = res_mark
-    emoji ={"Rain":":umbrella:",  "clear sky":":sunny:", "Thunderstorm":":pika:", "Drizzle":":shower:", "Snow":":snowflake:", 
- "Mist":":new_moon_with_face:", "Smoke":":yosi:", "Haze":":hotsprings:", "Dust":":mask:", "Fog":":dash:", "Sand":":camel:", "Ash":":volcano:", 
- "Squall":":ocean:", "Tornado":":cycrone:", "Clouds":":cloud:"}
+    #emoji = main_weather.get(res_mark)
+    #emoji ={"Rain":":umbrella:",  "clear sky":":sunny:", "Thunderstorm":":pika:", "Drizzle":":shower:", "Snow":":snowflake:", 
+    #"Mist":":new_moon_with_face:", "Smoke":":yosi:", "Haze":":hotsprings:", "Dust":":mask:", "Fog":":dash:", "Sand":":camel:", "Ash":":volcano:", 
+    #"Squall":":ocean:", "Tornado":":cycrone:", "Clouds":":cloud:"}
 
     #その他res_apiから取得
     # res_timezone = res_api.get("dt")
@@ -86,9 +86,9 @@ def reply_weather(message, arg):
     date_time = datetime.date.today()
 
     #英語をそれぞれ日本語にしてくれる辞書
-    main_weather ={"Rain":"雨が降ってますね・・・",  "clear sky":"晴れてますよ！！良いぞ", "Thunderstorm":"雷と雨が襲来します", "Drizzle":"霧雨、防水にお気をつけ下さい", "Snow":"・・・？！雪が降っている？！", 
- "Mist":"かすんでます", "Smoke":"けむいですご注意ください", "Haze":"もやもや気味です", "Dust":"ほこりっぽいです", "Fog":"きりだぁああああ前方注意", "Sand":"砂ぼこりが舞ってます！！僕も舞います", "Ash":"火山灰が降ってます！！お逃げの準備を", 
- "Squall":"嵐のコンサートですよ", "Tornado":"竜巻が来日してます", "Clouds":"曇ってますけど僕の心は晴れてます"}
+    main_weather ={"Rain":"雨が降ってますね・・・:umbrella:",  "clear sky":"晴れてますよ！！良いぞ:sunny::sunny:", "Thunderstorm":"雷と雨が襲来します:pika::pika:", "Drizzle":"霧雨、防水にお気をつけ下さい:shower:", "Snow":"・・・？！雪が降っている？！:snowflake:", 
+ "Mist":"かすんでます:new_moon_with_face:", "Smoke":"けむいですご注意ください:yosi:", "Haze":"もやもや気味です:hotsprings:", "Dust":"ほこりっぽいです:mask:", "Fog":"きりだぁああああ前方注意:dash:", "Sand":"砂ぼこりが舞ってます！！僕も舞います:camel::踊る男性:", "Ash":"火山灰が降ってます！！お逃げの準備を:volcano:", 
+ "Squall":"嵐のコンサートですよ:ocean:", "Tornado":"竜巻が来日してます:cycrone:", "Clouds":"曇ってますが:cloud:僕の心は晴れてます:sunglasses:"}
 
     # main_weather[res_mark]
 
