@@ -62,16 +62,6 @@ def reply_weather(message, arg):
     res_weather = res_api.get("weather")
     res_weatherlist = res_weather[0]
     res_mark = res_weatherlist.get("main")
-
-    #rainから降水量を取得
-    # res_rain = res_api.get("precipitation")
-    # res_rain_today = res_rain.get("value")
-    # if (res_rain_today == 0.0):
-    #     print("傘いらない")
-    # elif (res_rain_today >= 1.0):
-    #     print("傘ないとずぶ濡れ")
-    # else:
-    #    print("小雨だから気合いでいけるかも")
     
     #お天気マーク
     #emoji = main_weather.get(res_mark)
@@ -102,7 +92,6 @@ def reply_weather(message, arg):
 
 def get_api_response(city):
   request_url = f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={API_KEY}&lang=ja"
-
   response = requests.get(request_url)
   data = response.json()
 
