@@ -6,7 +6,7 @@ import slack
 from slackbot.bot import Bot
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-client = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
+client = slack.WebClient(token=os.environ['SLACK_CLIENT_TOKEN'])
 sched = BlockingScheduler()
 
 def send_message(channel, message):
