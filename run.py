@@ -6,17 +6,15 @@ import slack
 from slackbot.bot import Bot
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-client = slack.WebClient(token=os.environ['API_TOKEN'])
+client = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
 sched = BlockingScheduler()
 
 def send_message(channel, message):
     client.chat_postMessage(channel=channel, text=message)
 
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=7, minute=30)
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=1, minute=49)
 def timed_job():
-    # みぎに降雨情報のメッセージ引数わたす  IDは放牧部屋
-    send_message('G0149FE9SAW', "send_umbrella")
-
+    send_message('G0149FE9SAW', "job")
 
 def main():
     bot = Bot()
@@ -30,6 +28,7 @@ if __name__ == "__main__":
     job = Thread(target=main)
     job.start()
 
-    # APSchedulerの起動
+    # 傘警報の起動
     job = Thread(target=sched.start)
     job.start()
+
