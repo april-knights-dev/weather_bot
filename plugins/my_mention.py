@@ -15,8 +15,7 @@ import pprint
 import re
 import datetime
 
-API_KEY = "e2b220b4263af8d026cb5e44abd8f568" # xxxに自分のAPI_Keyを入力。
-SLACK_API_TOKEN="xoxb-331326118613-1282234996033-Mh6flsoxesSRjDD3024AiLwm"
+
 @listen_to('(.*)')
 def reply_weather(message, arg):
 
