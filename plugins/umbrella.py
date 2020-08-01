@@ -14,7 +14,7 @@ import datetime
 import slack
 from bs4 import BeautifulSoup
 
-def job_u(message):
+def get_umbrella():
     
     # スクレイピング対象の URL にリクエストを送り HTML を取得する
     res_url = requests.get('http://www.drk7.jp/weather/xml/13.xml')
@@ -38,44 +38,44 @@ def job_u(message):
 
     # 一日の降水確率最大
     if 70 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items)+ '%\nだから' + '傘絶対忘れないで！！！:umbrella_with_rain_drops:'
-    elif 40 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\nだから' + '傘持っていって！風邪ひくよ！！！'
-    elif 20 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\nだから' + '折り畳み傘あった方がいいかも！！！'
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items)+ '%:alert:\n' + '傘絶対忘れないで！！！:umbrella_with_rain_drops:'
+    elif 50 <= int(max(items)):
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '傘持っていって！！！:umbrella:'
+    elif 30 <= int(max(items)):
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '折り畳み傘があった方がいいかもね！！！:closed_umbrella::handbag:'
     else:
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\nだから' + '傘いらないよ！！！'
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '俺の日だ！！！！！:sunny::sunglasses:'
 
     # 雨警報条件分岐 6~24時
     if 70 <= int(rain612):
-        Morning_rain = f' 6~12時：' + items[1] + '%' + '\n傘をもって' + 'ちょっと早めに家でた方が良いかも！！！'
-    elif 40 <= int(rain612):
-        Morning_rain = f' 6~12時：' + items[1] + '%'
-    elif 20 <= int(rain612):
-        Morning_rain = f' 6~12時：' + items[1] + '%'
+        Morning_rain = f' 6~12時：' + items[1]
+    elif 50 <= int(rain612):
+        Morning_rain = f' 6~12時：' + items[1]
+    elif 30 <= int(rain612):
+        Morning_rain = f' 6~12時：' + items[1]
     else:
-        Morning_rain = f' 6~12時：' + items[1] + '%'
+        Morning_rain = f' 6~12時：' + items[1]
 
     if 70 <= int(rain1218):
-        Noon_rain = f'12~18時：' + items[2] + '%'
-    elif 40 <= int(rain1218):
-        Noon_rain = f'12~18時：' + items[2] + '%'
-    elif 20 <= int(rain1218):
-        Noon_rain = f'12~18時：' + items[2] + '%'
+        Noon_rain = f'12~18時：' + items[2]
+    elif 50 <= int(rain1218):
+        Noon_rain = f'12~18時：' + items[2]
+    elif 30 <= int(rain1218):
+        Noon_rain = f'12~18時：' + items[2]
     else:
-        Noon_rain = f'12~18時：' + items[2] + '%'
+        Noon_rain = f'12~18時：' + items[2]
 
     if 70 <= int(rain1824):
-        Night_rain = f'18~24時：' + items[3] + '%'
-    elif 40 <= int(rain1824):
-        Night_rain = f'18~24時：' + items[3] + '%'
-    elif 20 <= int(rain1824):
-        Night_rain = f'18~24時：' + items[3] + '%' + '\n雨降っててもわんちゃん気合いで帰れるよ！！！'
+        Night_rain = f'18~24時：' + items[3]
+    elif 50 <= int(rain1824):
+        Night_rain = f'18~24時：' + items[3]
+    elif 30 <= int(rain1824):
+        Night_rain = f'18~24時：' + items[3] 
     else:
-        Night_rain = f'18~24時：' + items[3] + '%' + '\n晴男が仕事してる！！！'
+        Night_rain = f'18~24時：' + items[3] 
 
-    message =('G018FNK81CZ',f"\nおはようございます！！！\n{Today_rain}\n朝昼晩に分けての降水確率は、\n{Morning_rain}\n{Noon_rain}\n{Night_rain}\n\n今日も一日頑張りましょう！！！")
-    return job_u
+    message = f"\nおはようございます！！！\n晴男、朝の叫ぶ降水確率配信です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！"
+    return message
 # schedule.every().day.at("12:00").do(job)
   
 # while True:

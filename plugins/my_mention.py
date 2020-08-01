@@ -19,41 +19,41 @@ API_KEY = "e2b220b4263af8d026cb5e44abd8f568" # xxxに自分のAPI_Keyを入力�
 @listen_to('(.*)')
 def reply_weather(message, arg):
 
-    if re.search('^天気|^傘', arg) is None:
+    if re.search('^天気|傘|雨|降水', arg) is None:
         return
 
     if "千葉" in arg:
         city_name = "Chiba"
         city_id = "08"
-        city = "千葉"
+        city = "千葉県"
     elif "埼玉" in arg:
         city_name = "Saitama"
         city_id = "12"
-        city = "埼玉"
+        city = "埼玉県"
     elif "茨城" in arg:
         city_name = "Ibaraki"
         city_id = "09"
-        city = "茨城"
+        city = "茨城県"
     elif "群馬" in arg:
         city_name = "Gunma"
         city_id = "11"
-        city = "群馬"
+        city = "群馬県"
     elif "山梨" in arg:
         city_name = "Yamanashi"
         city_id = "19"
-        city = "山梨"
+        city = "山梨県"
     elif "神奈川" in arg:
         city_name = "Kanagawa"
         city_id = "14"
-        city = "神奈川"
+        city = "神奈川県"
     elif "栃木" in arg:
         city_name = "Tochigi"
         city_id = "10"
-        city = "栃木"
+        city = "栃木県"
     else:
         city_name ="Tokyo"
         city_id = "13"
-        city = "東京"
+        city = "東京都"
 
     # スクレイピング対象の URL にリクエストを送り HTML を取得する
     res_url = requests.get(f'http://www.drk7.jp/weather/xml/{city_id}.xml')
@@ -74,48 +74,48 @@ def reply_weather(message, arg):
 
     # 一日の降水確率最大
     if 70 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items)+ '%\nだから' + '傘絶対忘れないで！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items)+ '%\n:alert:' + '傘絶対忘れないでください！！！:umbrella_with_rain_drops:'
     elif 40 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\nだから' + '傘持っていって！風邪ひくよ！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '傘持っていって！！！:umbrella:'
     elif 20 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\nだから' + '折り畳み傘あった方がいいかも！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:'
     else:
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\nだから' + '傘いらないよ！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '俺の日だ！！！！！:sunny::sunglasses:'
 
     # 雨警報条件分岐 6~24時
     if 70 <= int(rain612):
-        Morning_rain = f' 6~12時：' + items[1] + '%' + '\n傘をもって' + 'ちょっと早めに家でた方が良いかも！！！'
-    elif 40 <= int(rain612):
-        Morning_rain = f' 6~12時：' + items[1] + '%'
-    elif 20 <= int(rain612):
-        Morning_rain = f' 6~12時：' + items[1] + '%'
+        Morning_rain = f' 6~12時：' + items[1]
+    elif 50 <= int(rain612):
+        Morning_rain = f' 6~12時：' + items[1]
+    elif 30 <= int(rain612):
+        Morning_rain = f' 6~12時：' + items[1]
     else:
-        Morning_rain = f' 6~12時：' + items[1] + '%'
+        Morning_rain = f' 6~12時：' + items[1]
 
     if 70 <= int(rain1218):
-        Noon_rain = f'12~18時：' + items[2] + '%'
-    elif 40 <= int(rain1218):
-        Noon_rain = f'12~18時：' + items[2] + '%'
-    elif 20 <= int(rain1218):
-        Noon_rain = f'12~18時：' + items[2] + '%'
+        Noon_rain = f'12~18時：' + items[2]
+    elif 50 <= int(rain1218):
+        Noon_rain = f'12~18時：' + items[2]
+    elif 30 <= int(rain1218):
+        Noon_rain = f'12~18時：' + items[2]
     else:
-        Noon_rain = f'12~18時：' + items[2] + '%'
+        Noon_rain = f'12~18時：' + items[2]
 
     if 70 <= int(rain1824):
-        Night_rain = f'18~24時：' + items[3] + '%'
-    elif 40 <= int(rain1824):
-        Night_rain = f'18~24時：' + items[3] + '%'
-    elif 20 <= int(rain1824):
-        Night_rain = f'18~24時：' + items[3] + '%' + '\n雨降っててもわんちゃん気合いで帰れるよ！！！'
+        Night_rain = f'18~24時：' + items[3]
+    elif 50 <= int(rain1824):
+        Night_rain = f'18~24時：' + items[3]
+    elif 30 <= int(rain1824):
+        Night_rain = f'18~24時：' + items[3] 
     else:
-        Night_rain = f'18~24時：' + items[3] + '%' + '\n晴男が仕事してる！！！'
+        Night_rain = f'18~24時：' + items[3] 
 
 
 
 
     # city_nameで指定した地域のお天気結果取得
     res_api = get_api_response(city_name)
-    pprint.pprint(res_api)
+    # pprint.pprint(res_api)
 
 
     #mainから取得
@@ -146,8 +146,8 @@ def reply_weather(message, arg):
     if "天気" in arg:
         message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！") 
 
-    if "傘" in arg:
-        message.send(f"\nお疲れ様です！晴男です！！！\n{Today_rain}\n朝昼晩に分けての降水確率は、\n{Morning_rain}\n{Noon_rain}\n{Night_rain}")
+    if "降水" in arg or "雨" in arg or "傘" in arg :
+        message.send(f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！")
     
 
 
