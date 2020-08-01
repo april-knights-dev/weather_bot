@@ -19,7 +19,7 @@ API_KEY = "e2b220b4263af8d026cb5e44abd8f568" # xxxに自分のAPI_Keyを入力�
 @listen_to('(.*)')
 def reply_weather(message, arg):
 
-    if re.search('^天気','^傘', arg) is None:
+    if re.search('^天気|^傘', arg) is None:
         return
 
     if "千葉" in arg:
@@ -74,13 +74,13 @@ def reply_weather(message, arg):
 
     # 一日の降水確率最大
     if 70 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items)+ '%だから' + '傘絶対忘れないで！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items)+ '%\nだから' + '傘絶対忘れないで！！！'
     elif 40 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%だから' + '傘持っていって！風邪ひくよ！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\nだから' + '傘持っていって！風邪ひくよ！！！'
     elif 20 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%だから' + '折り畳み傘あった方がいいかも！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\nだから' + '折り畳み傘あった方がいいかも！！！'
     else:
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%だから' + '傘いらないよ！！！'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\nだから' + '傘いらないよ！！！'
 
     # 雨警報条件分岐 6~24時
     if 70 <= int(rain612):
@@ -128,14 +128,6 @@ def reply_weather(message, arg):
     res_weatherlist = res_weather[0]
     res_mark = res_weatherlist.get("main")
     
-    #お天気マーク
-    #emoji = main_weather.get(res_mark)
-    #emoji ={"Rain":":umbrella:",  "clear sky":":sunny:", "Thunderstorm":":pika:", "Drizzle":":shower:", "Snow":":snowflake:", 
-    #"Mist":":new_moon_with_face:", "Smoke":":yosi:", "Haze":":hotsprings:", "Dust":":mask:", "Fog":":dash:", "Sand":":camel:", "Ash":":volcano:", 
-    #"Squall":":ocean:", "Tornado":":cycrone:", "Clouds":":cloud:"}
-
-    #その他res_apiから取得
-    # res_timezone = res_api.get("dt")
 
     date_time = datetime.date.today()
 
