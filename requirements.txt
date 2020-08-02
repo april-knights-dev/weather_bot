@@ -1,2 +1,4 @@
-slackbot
+APScheduler
 requests
+slackclient
+slackbot
