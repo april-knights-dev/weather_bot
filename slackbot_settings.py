@@ -9,3 +9,5 @@ DEFAULT_REPLY = "すみません、それはまだわかりません"
 
 # プラグインスクリプトを置いてあるサブディレクトリ名のリスト
 PLUGINS = ['plugins']
+
+SLACK_CLIENT_TOKEN = os.environ["SLACK_CLIENT_TOKEN"]
