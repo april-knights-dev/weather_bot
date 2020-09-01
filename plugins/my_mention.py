@@ -76,11 +76,11 @@ def reply_weather(message, arg):
     if 70 <= int(max(items)):
         Today_rain = f'今日一日の{city}の降水確率は\n' + max(items)+ '%\n:alert:' + '傘絶対忘れないでください！！！:umbrella_with_rain_drops:'
     elif 40 <= int(max(items)):
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '傘持っていって！！！:umbrella:'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '傘持っていってください！！！:umbrella:'
     elif 20 <= int(max(items)):
         Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:'
     else:
-        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + '俺の日だ！！！！！:sunny::sunglasses:'
+        Today_rain = f'今日一日の{city}の降水確率は\n' + max(items) + '%\n' + ':sunny::sunglasses:'
 
     # 雨警報条件分岐 6~24時
     if 70 <= int(rain612):
@@ -147,7 +147,7 @@ def reply_weather(message, arg):
         message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！") 
 
     if "傘" in arg :
-        message.send(f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！")
+        message.send(f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n")
     
 
 
