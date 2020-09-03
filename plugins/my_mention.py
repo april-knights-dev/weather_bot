@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from slack import WebClient
 from slackbot.bot import respond_to     # @botname: で反応するデコーダ
 from slackbot.bot import listen_to      # チャネル内発言で反応するデコーダ
 from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
@@ -23,6 +24,13 @@ def reply_weather(message, arg):
 
     if re.search('^天気|^傘', arg) is None:
         return
+
+    # prefecture_set = {"東京":("Tokyo", "13"), "千葉":("Chiba", "08"), "埼玉":("Saitama", "12"), "茨城":("Ibaraki", "09"), 
+    # "群馬":("Gunma", "11"), "山梨":("Yamanashi", "19"), "神奈川":("Kanagawa", "14"), "栃木":("Tochigi", "10") }
+    # if msg in prefecture_set.keys():
+        #Trueの時だけ次の処理をする
+    # TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={msg}/{prefecture_set[msg][0]}&APPID={API_KEY}&lang=ja"
+    # KASA_URL =f"http://www.drk7.jp/weather/xml.{msg}/{prefecture_set[msg][1]}.xml"
 
     if "千葉" in arg:
         city_name = "Chiba"
@@ -123,7 +131,7 @@ def reply_weather(message, arg):
     #mainから取得
     res_main = res_api.get("main")
     #res_pressure = res_main.get("pressure")
-    res_temp = res_main.get("temp")
+    res_temp = str(res_main.get("temp"))
 
     #weatherから取得
     res_weather = res_api.get("weather")
@@ -132,7 +140,7 @@ def reply_weather(message, arg):
 
     
 
-    date_time = datetime.date.today()
+    date_time = str(datetime.date.today())
 
     #英語をそれぞれ日本語にしてくれる辞書
     main_weather ={"Rain":"雨が降ってますね・・・:umbrella:",  "clear sky":"晴れてますよ！！良いぞ:sunny::sunny:", "Thunderstorm":"雷と雨が襲来します:pika::pika:", "Drizzle":"霧雨、防水にお気をつけ下さい:shower:", "Snow":"・・・？！雪が降っている？！:snowflake:", 
@@ -150,17 +158,26 @@ def reply_weather(message, arg):
         # message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！") 
         client.chat_postMessage(
             channel=message.body['channel'],
-            blocks: message_format("*こんにちは！！晴男です！！！*",date_time +"\n現在の"+ city + "は" + res_mark + "！！！\n気温は"res_temp"度です！！！")
+            blocks=message_format("*こんにちは！！晴男です！！！*",date_time + "\n現在の"+ city + "は" + res_mark + "！！！\n気温は" + res_temp + "度です！！！")
             )
 
     if "傘" in arg :
         # message.send(f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！")
         client.chat_postMessage(
             channel=message.body['channel'],
-            blocks: message_format("*お疲れ様です！！！晴男です！！！*",Today_rain +"\n\n朝昼晩に分けての降水確率は、"+ Morning_rain + "%\n" + Noon_rain + "%\n" + Night_rain +"%\n\nですよ〜！！！")
+            blocks=message_format("*お疲れ様です！！！晴男です！！！*",Today_rain +"\n\n朝昼晩に分けての降水確率は、"+ Morning_rain + "%\n" + Noon_rain + "%\n" + Night_rain +"%\n\nですよ〜！！！")
         )
 
+# if msg in "傘" or "天気":
+#      prefectre_set.get()
+
+# if 傘 in msg:
+#     result_message = unbrella()
+#     post_message("G0149FE9SAW", result_message)
     
+# if 天気 in msg:
+#      result_message = weather()
+#      post_message("G0149FE9SAW", result_message)
     
 
 
