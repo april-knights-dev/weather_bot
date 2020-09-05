@@ -38,13 +38,13 @@ def get_umbrella():
 
     # 一日の降水確率最大
     if 70 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items)+ '%:alert:\n' + '傘絶対忘れないでください！！！:umbrella_with_rain_drops:'
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items)+ '%:alert:\n' + '傘絶対忘れないで！！！:umbrella_with_rain_drops:'
     elif 50 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '傘持っていってください！！！:umbrella:'
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '傘持っていって！！！:umbrella:'
     elif 30 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:'
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '折り畳み傘があった方がいいかもね！！！:closed_umbrella::handbag:'
     else:
-        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + ':sunny::sunglasses:'
+        Today_rain = f'今日一日の東京の降水確率は\n' + max(items) + '%\n' + '俺の日だ！！！！！:sunny::sunglasses:'
 
     # 雨警報条件分岐 6~24時
     if 70 <= int(rain612):
