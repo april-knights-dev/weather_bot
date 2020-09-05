@@ -26,13 +26,20 @@ def reply_weather(message, arg):
 
     if re.search("^天気|^傘", arg) is None:
         return
-
-    # prefecture_set = {"東京":("Tokyo", "13"), "千葉":("Chiba", "08"), "埼玉":("Saitama", "12"), "茨城":("Ibaraki", "09"), 
-    # "群馬":("Gunma", "11"), "山梨":("Yamanashi", "19"), "神奈川":("Kanagawa", "14"), "栃木":("Tochigi", "10") }
+    # prefecture_set = {
+        # "東京":("Tokyo", "13"), 
+        # "千葉":("Chiba", "08"), 
+        # "埼玉":("Saitama", "12"), 
+        # "茨城":("Ibaraki", "09"), 
+        # "群馬":("Gunma", "11"),
+        #  "山梨":("Yamanashi", "19"), 
+        # "神奈川":("Kanagawa", "14"), 
+        # "栃木":("Tochigi", "10") 
+    # }
     # if msg in prefecture_set.keys():
         #Trueの時だけ次の処理をする
-    # TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={msg}/{prefecture_set[msg][0]}&APPID={API_KEY}&lang=ja"
-    # KASA_URL =f"http://www.drk7.jp/weather/xml.{msg}/{prefecture_set[msg][1]}.xml"
+    # TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q=/{prefecture_set[msg][0]}&APPID={API_KEY}&lang=ja"
+    # KASA_URL =f"http://www.drk7.jp/weather/xml/{prefecture_set[msg][1]}.xml"
 
     if "千葉" in arg:
         city_name = "Chiba"
@@ -85,24 +92,18 @@ def reply_weather(message, arg):
     # 一日の降水確率最大
     if 70 <= int(max(items)):
         Today_rain = (
-            f"今日一日の{city}の降水確率は\n"
-            + max(items)
-            + "%\n:alert:"
-            + "傘絶対忘れないでください！！！:umbrella_with_rain_drops:"
+            f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert:傘絶対忘れないでください！！！:umbrella_with_rain_drops:"
         )
     elif 40 <= int(max(items)):
         Today_rain = (
-            f"今日一日の{city}の降水確率は\n" + max(items) + "%\n" + "傘持っていってください！！！:umbrella:"
+            f"今日一日の{city}の降水確率は\n*{max(items)}%*\n傘持っていってください！！！:umbrella:"
         )
     elif 20 <= int(max(items)):
         Today_rain = (
-            f"今日一日の{city}の降水確率は\n"
-            + max(items)
-            + "%\n"
-            + "折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:"
+            f"今日一日の{city}の降水確率は\n*{max(items)}%*\n折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:"
         )
     else:
-        Today_rain = f"今日一日の{city}の降水確率は\n" + max(items) + "%\n" + ":sunny::sunglasses:"
+        Today_rain = f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:sunny::sunglasses:"
 
     # 雨警報条件分岐 6~24時
     if 70 <= int(rain612):
@@ -175,8 +176,8 @@ def reply_weather(message, arg):
         res_mark = f"設定辞書に{res_mark}が含まれてないみたいだよ"
 
     if "天気" in arg:
-        aisatu = "*こんにちは！！晴男です！！！*"
-        nakami = f"{date_time}\n現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！"
+        aisatu = "\n*こんにちは！！晴男です！！！*"
+        nakami = f"\n\n{date_time}\n現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！"
 
         client.chat_postMessage(
             channel=message.body["channel"],
@@ -184,13 +185,16 @@ def reply_weather(message, arg):
         )
 
     if "傘" in arg:
-        message.send(
-            f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！"
-        )
-        # client.chat_postMessage(
-        #     channel=message.body['channel'],
-        #     blocks=message_format("*お疲れ様です！！！晴男です！！！*",Today_rain +"\n\n朝昼晩に分けての降水確率は、"+ Morning_rain + "%\n" + Noon_rain + "%\n" + Night_rain +"%\n\nですよ〜！！！")
+        negirai = "\n*お疲れ様です！！！晴男です！！！*"
+        syousai = f"\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！"
+
+        # message.send(
+        #     f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！"
         # )
+        client.chat_postMessage(
+            channel=message.body["channel"],
+            blocks=message_format(negirai, syousai),
+        )
 
 
 # if msg in "傘" or "天気":
@@ -221,24 +225,6 @@ def message_format(aisatu, message):
     return blockkit
 
 
-# def message_format(aisatu,message):
-#     blockkit = [
-#             {
-#                 "type": "section",
-#                 "text": {
-#                     "type": "mrkdwn",
-#                     "text": aisatu
-#                 }
-#             },
-#             {
-#                 "type": "section",
-#                 "text": {
-#                     "type": "mrkdwn",
-#                     "text": message
-#                 }
-#             }
-#         ]
-#     return blockkit
 # 辞書型の中身の取り出し方
 # dict["key_name"] or dict.get("key_name")
 
