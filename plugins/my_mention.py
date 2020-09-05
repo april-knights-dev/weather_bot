@@ -16,7 +16,7 @@ import pprint
 import re
 import datetime
 
-client = WebClient(token=os.getenv('SLACK_CLIENT_TOKEN'))
+# client = WebClient(token=os.getenv('SLACK_CLIENT_TOKEN'))
 
 API_KEY = "e2b220b4263af8d026cb5e44abd8f568" # xxxに自分のAPI_Keyを入力。
 @listen_to('(.*)')
@@ -155,11 +155,22 @@ def reply_weather(message, arg):
         res_mark = f"設定辞書に{res_mark}が含まれてないみたいだよ"
     
     if "天気" in arg:
-        message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！") 
-        # client.chat_postMessage(
-        #     channel=message.body['channel'],
-        #     blocks=message_format("*こんにちは！！晴男です！！！*",date_time + "\n現在の"+ city + "は" + res_mark + "！！！\n気温は" + res_temp + "度です！！！")
-        #     )
+        nakami = "*こんにちは！！晴男です！！！*\n" + date_time + "\n現在の"+ city + "は" + res_mark + "！！！\n気温は" + res_temp + "度です！！！"
+        # message.reply(f"\nこんにちは！晴男です！！！\n{date_time} 現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！") 
+        client.chat_postMessage(
+            channel=message.body['channel'],
+            text=nakami
+            # blocks=[
+            #     {
+            #         "type": "section",
+            #         "text": {
+            #             "type": "mrkdwn",
+            #             "text": nakami
+            #         }
+            #     }
+            # ]
+            # message_format("*こんにちは！！晴男です！！！*",date_time + "\n現在の"+ city + "は" + res_mark + "！！！\n気温は" + res_temp + "度です！！！")
+        )
 
     if "傘" in arg :
         message.send(f"\nお疲れ様です！！！晴男です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n今日も一日頑張りましょう！！！")
