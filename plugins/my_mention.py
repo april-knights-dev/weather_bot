@@ -37,20 +37,25 @@ def reply_weather(content, msg):
         "神奈川":("Kanagawa", "14"), 
         "栃木":("Tochigi", "10") 
     }
-    if msg in prefecture_set.keys():
-    # Trueの時だけ次の処理をする
-        TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={prefecture_set[msg][0]}&APPID={API_KEY}&lang=ja"
-        KASA_URL =f"http://www.drk7.jp/weather/xml/{prefecture_set[msg][1]}.xml"
+
+    city = msg.split()
+    print(city)
+    if len(city) == 1:
+        city = "東京"
+    elif len(city) == 2:
+        city = city[1]
+
+    print(city)
+    for key in prefecture_set.keys():
+        if city == key:
+            TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={prefecture_set[city][0]}&APPID={API_KEY}&lang=ja"
+            KASA_URL =f"http://www.drk7.jp/weather/xml/{prefecture_set[city][1]}.xml"
+            break
     else:
-        TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q=Tokyo&APPID={API_KEY}&lang=ja"
-        KASA_URL =f"http://www.drk7.jp/weather/xml/13.xml"
-    
+        content.reply("僕を呼ぶ時は[天気スペース首都圏]って入力してね！！！\n※都や県はいらないよッッ！！")
+        return "success"
+                
     if "傘" in msg:
-        city = msg.split()
-        if len(city) == 1:
-            city = "東京"
-        elif len(city) == 2:
-            city = city[1]
 
         kasa_response = requests.get(KASA_URL)
 
@@ -60,15 +65,10 @@ def reply_weather(content, msg):
         # # 降水確率リスト表記
         items = list(soup.find("rainfallchance").stripped_strings)
 
-        # 6時間毎の降水確率
-        rain612 = int(items[1])
-        rain1218 = int(items[2])
-        rain1824 = int(items[3])
-
         # 一日の降水確率最大
         if 70 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert:傘絶対忘れないでください！！！:umbrella_with_rain_drops:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert::alert:傘絶対忘れないでください！！！:umbrella_with_rain_drops::alert::alert:"
             )
         elif 40 <= int(max(items)):
             today_rain = (
@@ -81,33 +81,9 @@ def reply_weather(content, msg):
         else:
             today_rain = f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:sunny::sunglasses:"
 
-        # 雨警報条件分岐 6~24時
-        if 70 <= int(rain612):
-            morning_rain = "6~12時：" + items[1]
-        if 50 <= int(rain612):
-            morning_rain = "6~12時：" + items[1]
-        if 30 <= int(rain612):
-            morning_rain = "6~12時：" + items[1]
-        else:
-            morning_rain = "6~12時：" + items[1]
-
-        if 70 <= int(rain1218):
-            noon_rain = "12~18時：" + items[2]
-        if 50 <= int(rain1218):
-            noon_rain = "12~18時：" + items[2]
-        if 30 <= int(rain1218):
-            noon_rain = "12~18時：" + items[2]
-        else:
-            noon_rain = "12~18時：" + items[2]
-
-        if 70 <= int(rain1824):
-            night_rain = "18~24時：" + items[3]
-        if 50 <= int(rain1824):
-            night_rain = "18~24時：" + items[3]
-        if 30 <= int(rain1824):
-            night_rain = "18~24時：" + items[3]
-        else:
-            night_rain = "18~24時：" + items[3]
+        morning_rain = "6~12時：" + items[1]
+        noon_rain = "12~18時：" + items[2]
+        night_rain = "18~24時：" + items[3]
         
         if "傘" in msg:
             negirai = "\n*お疲れ様です！！！晴男です！！！*"
@@ -121,12 +97,9 @@ def reply_weather(content, msg):
         tenki_response = requests.get(TENKI_URL).json()
         print(TENKI_URL,tenki_response)
 
-        # # city_nameで指定した地域のお天気結果取得
-        # res_api = tenki_response.get("city_name")
-
         # mainから取得
         res_main = tenki_response.get("main")
-        res_temp = str(tenki_response.get("temp"))
+        res_temp = str(res_main.get("temp"))
 
         # weatherから取得
         res_weather = tenki_response.get("weather")
@@ -162,11 +135,6 @@ def reply_weather(content, msg):
 
         if "天気" in msg:
             aisatu = "\n*こんにちは！！晴男です！！！*"
-            city = msg.split()
-            if len(city) == 1:
-                city = "東京"
-            elif len(city) == 2:
-                city = city[1]
 
             nakami = f"\n\n{date_time}\n現在の{city}は{res_mark}！！！\n気温は{res_temp}度です！！！"
 
@@ -174,21 +142,6 @@ def reply_weather(content, msg):
                 channel=content.body["channel"],
                 blocks=message_format(aisatu, nakami),
             )
-
-# def tenki_response(city):
-#     TENKI_URL = f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={city}&APPID={API_KEY}&lang=ja"
-#     response = requests.get(TENKI_URL)
-#     data = response.json()
-
-#     return data
-
-# def kasa_response(city_id):
-#     KASA_URL =f"http://www.drk7.jp/weather/xml/{city_id}.xml"
-#     response = requests.get(KASA_URL)
-#     soup = BeautifulSoup(response.content, "html.parser")
-
-#     return soup
-
 
 def message_format(aisatu, message):
     blockkit = [
