@@ -16,7 +16,7 @@ import pprint
 import re
 import datetime
 
-client = WebClient(token=os.getenv("WEB_API_TOKEN"))
+client = WebClient(token=os.getenv("API_TOKEN"))
 
 API_KEY = "e2b220b4263af8d026cb5e44abd8f568"  # xxxに自分のAPI_Keyを入力。
 
