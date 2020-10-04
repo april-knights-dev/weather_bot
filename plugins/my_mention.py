@@ -92,6 +92,8 @@ def reply_weather(content, msg):
             client.chat_postMessage(
                 channel=content.body["channel"],
                 blocks=message_format(negirai, syousai),
+                username=u'晴男の叫ぶ天気bot',
+                icon_url="https://files.slack.com/files-tmb/T9R9L3GJ1-F01BUNB6J10-a43aa31fc5/____________________________360.jpg"
             )
     elif "天気" in msg:
         tenki_response = requests.get(TENKI_URL).json()
@@ -141,6 +143,8 @@ def reply_weather(content, msg):
             client.chat_postMessage(
                 channel=content.body["channel"],
                 blocks=message_format(aisatu, nakami),
+                username=u'晴男の叫ぶ天気bot',
+                icon_url="https://files.slack.com/files-tmb/T9R9L3GJ1-F01BUNB6J10-a43aa31fc5/____________________________360.jpg"
             )
 
 def message_format(aisatu, message):
