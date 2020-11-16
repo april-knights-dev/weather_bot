@@ -16,86 +16,83 @@ import pprint
 import re
 import datetime
 
-client = WebClient(token=os.getenv("WEB_API_TOKEN"))
+client = WebClient(token=os.getenv("API_TOKEN"))
 
 API_KEY = "e2b220b4263af8d026cb5e44abd8f568"  # xxxに自分のAPI_Keyを入力。
 
 
 @listen_to("(.*)")
 def reply_weather(content, msg):
-
     if re.search("^天気|^傘", msg) is None:
         return
-
     prefecture_set = {
-        "東京":("Tokyo", "13"), 
-        "千葉":("Chiba", "08"), 
-        "埼玉":("Saitama", "12"), 
-        "茨城":("Ibaraki", "09"), 
-        "群馬":("Gunma", "11"),
-        "山梨":("Yamanashi", "19"), 
-        "神奈川":("Kanagawa", "14"), 
-        "栃木":("Tochigi", "10") 
+        "東京": ("35.6181022", "139.7730337", "13"),
+        "千葉": ("35.60472", "140.12333", "08"),
+        "埼玉": ("35.85694", "139.64889", "12"),
+        "茨城": ("36.34139", "140.44667", "09"),
+        "群馬": ("36.39111", "139.06083", "11"),
+        "山梨": ("35.66389", "138.56833", "19"),
+        "神奈川": ("35.44778", "139.6425", "14"),
+        "栃木": ("36.56583", "139.88361", "10")
     }
-
     city = msg.split()
     print(city)
     if len(city) == 1:
         city = "東京"
     elif len(city) == 2:
         city = city[1]
-
     print(city)
     for key in prefecture_set.keys():
         if city == key:
-            TENKI_URL =f"http://api.openweathermap.org/data/2.5/weather?units=metric&q={prefecture_set[city][0]}&APPID={API_KEY}&lang=ja"
-            KASA_URL =f"http://www.drk7.jp/weather/xml/{prefecture_set[city][1]}.xml"
+            TENKI_URL = f"https://api.openweathermap.org/data/2.5/onecall?lat={prefecture_set[city][0]}&lon={prefecture_set[city][1]}&units=metric&exclude=hourly,minutely,alerts&lang=ja&appid={API_KEY}"
+            KASA_URL = f"http://www.drk7.jp/weather/xml/{prefecture_set[city][2]}.xml"
             break
     else:
         content.reply("僕を呼ぶ時は[天気スペース首都圏]って入力してね！！！\n※都や県はいらないよッッ！！")
         return "success"
-                
     if "傘" in msg:
-
+        # openweatherの降水量が日本はまだ適用外なのでjjwdから持ってきています
+        umb_url = 'https://jjwd.info/api/v2/station/44056'
+        umb_data = requests.get(umb_url)
+        all_data = umb_data.json()
+        # print(json.dumps(rall_data, indent=3))
+        pre_day = all_data.get("station").get("preall").get("precip_daily")
         kasa_response = requests.get(KASA_URL)
-
         # レスポンスの HTML から BeautifulSoup オブジェクトを作る
         soup = BeautifulSoup(kasa_response.content, "html.parser")
-
         # # 降水確率リスト表記
         items = list(soup.find("rainfallchance").stripped_strings)
-
         # 一日の降水確率最大
         if 70 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert::alert:傘絶対忘れないでください！！！:umbrella_with_rain_drops::alert::alert:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert::alert:傘絶対忘れないでください！！！:傘と雨粒::alert::alert:"
             )
         elif 40 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n傘持っていってください！！！:umbrella:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n傘持っていってください！！！:傘:"
             )
         elif 20 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n折り畳み傘があった方がいいかも！！！:閉じた傘::ハンドバッグ:"
             )
         else:
-            today_rain = f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:sunny::sunglasses:"
-
+            today_rain = f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:晴れ::キリッ:"
         morning_rain = "6~12時：" + items[1]
         noon_rain = "12~18時：" + items[2]
         night_rain = "18~24時：" + items[3]
-        
         if "傘" in msg:
             negirai = "\n*お疲れ様です！！！晴男です！！！*"
-            syousai = f"\n\n{today_rain}\n\n朝昼晩に分けての降水確率は、\n{morning_rain}%\n{noon_rain}%\n{night_rain}%"
+            syousai = f"\n\n{today_rain}\n\n朝昼晩に分けての降水確率は、\n{morning_rain}%\n{noon_rain}%\n{night_rain}%\n一日の降水量は{pre_day}mmです！！！"
 
             client.chat_postMessage(
                 channel=content.body["channel"],
                 blocks=message_format(negirai, syousai),
+                username=u'晴男の叫ぶ天気bot',
+                icon_url="https://files.slack.com/files-tmb/T9R9L3GJ1-F01BUNB6J10-a43aa31fc5/____________________________360.jpg"
             )
     elif "天気" in msg:
         tenki_response = requests.get(TENKI_URL).json()
-        print(TENKI_URL,tenki_response)
+        print(TENKI_URL, tenki_response)
 
         # mainから取得
         res_main = tenki_response.get("main")
@@ -141,7 +138,10 @@ def reply_weather(content, msg):
             client.chat_postMessage(
                 channel=content.body["channel"],
                 blocks=message_format(aisatu, nakami),
+                username=u'晴男の叫ぶ天気bot',
+                icon_url="https://files.slack.com/files-tmb/T9R9L3GJ1-F01BUNB6J10-a43aa31fc5/____________________________360.jpg"
             )
+
 
 def message_format(aisatu, message):
     blockkit = [
