@@ -103,36 +103,28 @@ def reply_weather(content, msg):
         print(TENKI_URL, tenki_response)
 
         # mainから取得
-        daily = tenki_response.get("daily")
-        res_temp = tenki_response.get("current").get("temp")
-        res_mark = tenki_response.get("current").get("weather")[0].get("main")
+        daily = tenki_response["daily"]
+        current = tenki_response["current"]
 
-        daily_weather = [daily[0].get("weather")[0].get("main"),
-                         daily[1].get("weather")[0].get("main"),
-                         daily[2].get("weather")[0].get("main"),
-                         daily[3].get("weather")[0].get("main"),
-                         daily[4].get("weather")[0].get("main"),
-                         daily[5].get("weather")[0].get("main"),
-                         daily[6].get("weather")[0].get("main")]
+        res_temp = current["temp"]
+        res_mark = current["weather"][0]["main"]
+
+        daily_weather = [daily[n].get("weather")[0].get("main")
+                         for n in range(7)]
 
         locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
 
         # 一週間分の日付と曜日を取得
-        dt0 = dt.date.today()
-        dt1 = dt0 + dt.timedelta(days=1)
-        dt2 = dt0 + dt.timedelta(days=2)
-        dt3 = dt0 + dt.timedelta(days=3)
-        dt4 = dt0 + dt.timedelta(days=4)
-        dt5 = dt0 + dt.timedelta(days=5)
-        dt6 = dt0 + dt.timedelta(days=6)
+        date_today = dt.date.today()
 
-        d0 = calendar.day_name[dt0.weekday()]
-        d1 = calendar.day_name[dt1.weekday()]
-        d2 = calendar.day_name[dt2.weekday()]
-        d3 = calendar.day_name[dt3.weekday()]
-        d4 = calendar.day_name[dt4.weekday()]
-        d5 = calendar.day_name[dt5.weekday()]
-        d6 = calendar.day_name[dt6.weekday()]
+        def weekdays(today, n):
+            return today + dt.timedelta(days=n)
+
+        def day_of_the_week(day):
+            return calendar.day_name[day.weekday()]
+
+        days = [weekdays(date_today, n) for n in range(0, 7)]
+        d0, d1, d2, d3, d4, d5, d6 = [day_of_the_week(day) for day in days]
 
         weather_stmp = {
             "Rain": ":umbrella_with_rain_drops:",
@@ -154,34 +146,8 @@ def reply_weather(content, msg):
         }
 
         # 一週間分の天気をスタンプに置換
-        if weather_stmp.get(daily_weather[0]):
-            dw = weather_stmp.get(daily_weather[0])
-        else:
-            dw = ":question:"
-        if weather_stmp.get(daily_weather[1]):
-            dw1 = weather_stmp.get(daily_weather[1])
-        else:
-            dw1 = ":question:"
-        if weather_stmp.get(daily_weather[2]):
-            dw2 = weather_stmp.get(daily_weather[2])
-        else:
-            dw2 = ":question:"
-        if weather_stmp.get(daily_weather[3]):
-            dw3 = weather_stmp.get(daily_weather[3])
-        else:
-            dw3 = ":question:"
-        if weather_stmp.get(daily_weather[4]):
-            dw4 = weather_stmp.get(daily_weather[4])
-        else:
-            dw4 = ":question:"
-        if weather_stmp.get(daily_weather[5]):
-            dw5 = weather_stmp.get(daily_weather[5])
-        else:
-            dw5 = ":question:"
-        if weather_stmp.get(daily_weather[6]):
-            dw6 = weather_stmp.get(daily_weather[6])
-        else:
-            dw6 = ":question:"
+        dw, dw1, dw2, dw3, dw4, dw5, dw6 = [weather_stmp.get(
+            daily_weather[0], ":question:") for n in range(7)]
 
         # 呼び出しの年月日を取得
         date_time = str(datetime.date.today())
