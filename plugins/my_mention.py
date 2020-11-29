@@ -122,9 +122,11 @@ def reply_weather(content, msg):
 
         #おすすめ服分岐用
         if 40 <= max(feels_like.values()):
-            get_dress = "裸でいいんじゃないかなってレベルで暑いね！！！水分はこまめに取ろう！！！！！"
-        elif 25 <= max(feels_like.values()):
+            get_dress = "裸でいいんじゃないかなってレベルで暑いね！！！水分をこまめに取ろう！！！！！"
+        elif 30 <= max(feels_like.values()) <= 39:
             get_dress = "う〜ん、まだまだ暑いね！！半袖シャツで十分！！！！日焼け止めとか紫外線対策も忘れずにね！！！！！"
+        elif 25 <= max(feels_like.values()) <= 29:
+            get_dress = "だんだん暑くなってきたね！薄手の長袖シャツ〜暑がりさんは半袖シャツがおすすめ！！！！！"
         elif 20 <= max(feels_like.values()) <= 24:
             get_dress = "そろそろ袖が欲しくなるかも！！長袖シャツがおすすめだよ！！！"
         elif 16 <= max(feels_like.values()) <= 19:
