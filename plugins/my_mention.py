@@ -23,8 +23,11 @@ API_KEY = "e2b220b4263af8d026cb5e44abd8f568"  # xxxに自分のAPI_Keyを入力�
 
 @listen_to("(.*)")
 def reply_weather(content, msg):
-    if re.search("^天気|^傘", msg) is None:
+    print("起動中")
+    if re.search("^天気($|!+?|！+?|\s)|^傘($|!+?|！+?|\s)", msg) is None:
+        print("ここまできてる")
         return
+
     prefecture_set = {
         "東京": ("35.676192","139.650311","13"), 
         "千葉": ("35.335416","140.183252","08"), 
@@ -68,21 +71,22 @@ def reply_weather(content, msg):
         # 一日の降水確率最大
         if 70 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert::alert:傘絶対忘れないでください！！！:傘と雨粒::alert::alert:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:alert::alert:傘絶対忘れないでください！！！:umbrella_with_rain_drops::alert::alert:"
             )
         elif 40 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n傘持っていってください！！！:傘:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n傘持っていってください！！！:umbrella:"
             )
         elif 20 <= int(max(items)):
             today_rain = (
-                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n折り畳み傘があった方がいいかも！！！:閉じた傘::ハンドバッグ:"
+                f"今日一日の{city}の降水確率は\n*{max(items)}%*\n折り畳み傘があった方がいいかも！！！:closed_umbrella::handbag:"
             )
         else:
-            today_rain = f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:晴れ::キリッ:"
-            morning_rain = "6~12時：" + items[1]
-            noon_rain = "12~18時：" + items[2]
-            night_rain = "18~24時：" + items[3]
+            today_rain = f"今日一日の{city}の降水確率は\n*{max(items)}%*\n:sunny::sunglasses:"
+
+        morning_rain = "6~12時：" + items[1]
+        noon_rain = "12~18時：" + items[2]
+        night_rain = "18~24時：" + items[3]
 
         if "傘" in msg:
             negirai = "\n*お疲れ様です！！！晴男です！！！*"
