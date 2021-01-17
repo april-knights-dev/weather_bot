@@ -23,6 +23,7 @@ def job_timed():
 def main():
     bot = Bot()
     bot.run()
+    print("立ち上がリーヨ")
 
 if __name__ == "__main__":
     print('start slackbot')

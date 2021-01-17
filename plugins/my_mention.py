@@ -23,8 +23,11 @@ API_KEY = "e2b220b4263af8d026cb5e44abd8f568"  # xxxに自分のAPI_Keyを入力�
 
 @listen_to("(.*)")
 def reply_weather(content, msg):
-    if re.search("^天気|^傘", msg) is None:
+    print("起動中")
+    if re.search("^天気($|!+?|！+?|\s)|^傘($|!+?|！+?|\s)", msg) is None:
+        print("ここまできてる")
         return
+
     prefecture_set = {
         "東京": ("35.676192","139.650311","13"), 
         "千葉": ("35.335416","140.183252","08"), 
