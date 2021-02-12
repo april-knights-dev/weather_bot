@@ -86,14 +86,17 @@ def get_umbrella():
     # HTMLの解析
     bsObj = BeautifulSoup(w_r.content, "html.parser")
 
-    # 5日分の天気情報を取得
+    # 天気情報を取得
     all_info = bsObj.find(class_="forecast-point-10days")
     all_weather = all_info.find_all(class_="forecast-telop")
 
-    # 5日分の天気
-
-    # 5日分の天気
+    # 明日、明後日の天気
     weekly_weather = all_weather[4].string, all_weather[10].string
+
+    # 取得した天気を絵文字に置換
+    weather_data = ','.join(weekly_weather)
+    replace_weather = weather_data.translate(str.maketrans(
+        {'晴': ':sunny:', '曇': ':sunglasses:', '雨': ':umbrella_with_rain_drops:', '雪': ':snowman:'})).split(",")
 
     # 気温の取得
     all_temp_max = all_info.find_all(class_="high-temp")  # 最高気温
@@ -101,7 +104,9 @@ def get_umbrella():
     all_temp_min = all_info.find_all(class_="low-temp")  # 最低気温
     temp_min = all_temp_min[0].string, all_temp_min[1].string
 
-    message = f"\nおはようございます！！！\n晴男、朝の叫ぶ降水確率配信です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、\n{Morning_rain}%\n{Noon_rain}%\n{Night_rain}%\n\n明日の天気は {weekly_weather[0]}\n:thermometer:最高・最低気温は{temp_max[0]} / {temp_min[0]}\n明後日の天気は{weekly_weather[1]}\n:thermometer:最高・最低気温は{temp_max[1]}{temp_min[1]}\n\n今日も一日頑張りましょう！！！"
+    message = f"\nおはようございます！！！\n晴男、朝の叫ぶ降水確率配信です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、
+    \n{Morning_rain} %\n{Noon_rain} %\n{Night_rain} %\n\n明日の天気は {replace_weather[0]}\n: thermometer:  最高・最低気温は
+    {temp_max[0]} / {temp_min[0]}\n明後日の天気は{replace_weather[1]}\n: thermometer:  最高・最低気温は{temp_max[1]} / {temp_min[1]}\n\n今日も一日頑張りましょう！！！"
     return message
 # schedule.every().day.at("12:00").do(job)
 
