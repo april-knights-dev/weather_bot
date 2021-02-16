@@ -36,9 +36,9 @@ def get_umbrella():
 
     # 一日の降水確率最大
     if 70 <= int(max(items)):
-        Today_rain = f'今日一日の東京の降水確率は\n' + \
+        Today_rain = f"今日一日の東京の降水確率は\n " + \
             max(items) + '%:alert:\n' + \
-            '傘絶対忘れないでください！！！:umbrella_with_rain_drops:'
+            "傘絶対忘れないでください！！！:umbrella_with_rain_drops:"
     elif 50 <= int(max(items)):
         Today_rain = f'今日一日の東京の降水確率は\n' + \
             max(items) + '%\n' + '傘持っていってください！！！:umbrella:'
@@ -104,9 +104,9 @@ def get_umbrella():
     all_temp_min = all_info.find_all(class_="low-temp")  # 最低気温
     temp_min = all_temp_min[0].string, all_temp_min[1].string
 
-    message = f"\nおはようございます！！！\n晴男、朝の叫ぶ降水確率配信です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、
-    \n{Morning_rain} %\n{Noon_rain} %\n{Night_rain} %\n\n明日の天気は {replace_weather[0]}\n: thermometer:  最高・最低気温は
-    {temp_max[0]} / {temp_min[0]}\n明後日の天気は{replace_weather[1]}\n: thermometer:  最高・最低気温は{temp_max[1]} / {temp_min[1]}\n\n今日も一日頑張りましょう！！！"
+    message = f'\nおはようございます！！！\n晴男、朝の叫ぶ降水確率配信です！！！\n\n{Today_rain}\n\n朝昼晩に分けての降水確率は、' + \
+        f' \n{Morning_rain} %\n{Noon_rain} %\n{Night_rain} %\n\n明日の天気は {replace_weather[0]}\n' + \
+        f' :thermometer:  最高・最低気温は{temp_max[0]} / {temp_min[0]}\n明後日の天気は{replace_weather[1]}\n :thermometer:  最高・最低気温は{temp_max[1]} / {temp_min[1]}\n\n今日も一日頑張りましょう！！！'
     return message
 # schedule.every().day.at("12:00").do(job)
 
