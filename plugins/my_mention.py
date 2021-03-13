@@ -7,6 +7,7 @@ from slack import WebClient
 from datetime import datetime
 from bs4 import BeautifulSoup
 
+
 import os
 import requests
 import urllib.request as req
@@ -16,6 +17,8 @@ import pprint
 import re
 import datetime
 import traceback
+from bs4 import BeautifulSoup
+
 
 client = WebClient(token=os.getenv("API_TOKEN"))
 
@@ -26,14 +29,14 @@ def reply_weather(msg, channel):
     print("起動中")
 
     prefecture_set = {
-        "東京": ("35.676192","139.650311","13"), 
-        "千葉": ("35.335416","140.183252","08"), 
-        "埼玉": ("35.996251","139.446601","12"), 
-        "茨城": ("36.219357","140.183252","09"), 
-        "群馬": ("36.560539","138.879997","11"),
-        "山梨": ("35.663511","138.638888","19"), 
-        "神奈川": ("35.491354","139.284143","14"), 
-        "栃木": ("36.671474","139.854727","10") 
+        "東京": ("35.676192", "139.650311", "13"),
+        "千葉": ("35.335416", "140.183252", "08"),
+        "埼玉": ("35.996251", "139.446601", "12"),
+        "茨城": ("36.219357", "140.183252", "09"),
+        "群馬": ("36.560539", "138.879997", "11"),
+        "山梨": ("35.663511", "138.638888", "19"),
+        "神奈川": ("35.491354", "139.284143", "14"),
+        "栃木": ("36.671474", "139.854727", "10")
     }
 
     city = msg.split()
@@ -42,7 +45,6 @@ def reply_weather(msg, channel):
         city = "東京"
     elif len(city) == 2:
         city = city[1]
-    print(city)
 
     for key in prefecture_set.keys():
         if city == key:
@@ -92,36 +94,37 @@ def reply_weather(msg, channel):
             client.chat_postMessage(
                 channel=channel,
                 blocks=message_format(negirai, syousai),
+                username=u'晴男の叫ぶ天気bot',
+                icon_url="https://i.gyazo.com/601b4894e87c196c1296d1d0e2f92c51.png"
             )
     elif "天気" in msg:
         tenki_response = requests.get(TENKI_URL).json()
 
-        #現在の気象データを取得
+        # 現在の気象データを取得
         daily = tenki_response["daily"]
         current = tenki_response["current"]
 
         try:
-        #現在の天気のパラメータ（雨・晴・曇りなどなど）
+            # 現在の天気のパラメータ（雨・晴・曇りなどなど）
             res_mark = current["weather"][0]["main"]
         except KeyError as e:
-            print("キーが無いらしいよ:",e)
+            print("キーが無いらしいよ:", e)
         # 呼び出しの年月日を取得
         now = datetime.datetime.now()
         now_year = str(now.year)
         now_month = str(now.month)
         now_day = str(now.day)
 
-        #服着ろ警報(体感温度取得)
+        # 服着ろ警報(体感温度取得)
         feels_like = daily[0].get("feels_like")
-        #朝の気温
+        # 朝の気温
         temp_morn = feels_like["morn"]
-        #昼の気温
+        # 昼の気温
         temp_day = feels_like["day"]
-        #夜の気温
+        # 夜の気温
         temp_night = feels_like["night"]
 
-
-        #おすすめ服分岐用
+        # おすすめ服分岐用
         if 40 <= max(feels_like.values()):
             get_dress = "裸でいいんじゃないかなってレベルで暑いね！！！水分をこまめに取ろう！！！！！"
         elif 30 <= max(feels_like.values()) <= 39:
@@ -138,7 +141,6 @@ def reply_weather(msg, channel):
             get_dress = "寒いね！！！！！！！冬服の上に薄手のコートが欲しいね！！！！"
         else:
             get_dress = "めっっっちゃ寒いね！？！？！？！とにかくしっかり防寒対策してね！！！！！"
-
 
         # 英語をそれぞれ日本語にしてくれる辞書
         main_weather = {
