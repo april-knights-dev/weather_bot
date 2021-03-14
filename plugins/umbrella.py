@@ -1,8 +1,8 @@
 # coding: utf-8
 
-from slackbot.bot import respond_to     # @botname: で反応するデコーダ
-from slackbot.bot import listen_to      # チャネル内発言で反応するデコーダ
-from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
+# from slackbot.bot import respond_to     # @botname: で反応するデコーダ
+# from slackbot.bot import listen_to      # チャネル内発言で反応するデコーダ
+# from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
 import datetime
 from slacker import Slacker
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -12,6 +12,7 @@ import requests
 import urllib.request as req
 import slack
 from bs4 import BeautifulSoup
+
 
 
 def get_umbrella():
