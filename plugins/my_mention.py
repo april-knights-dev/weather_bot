@@ -1,9 +1,12 @@
 # coding: utf-8
 
 from slack import WebClient
-from slackbot.bot import respond_to  # @botname: で反応するデコーダ
-from slackbot.bot import listen_to  # チャネル内発言で反応するデコーダ
-from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
+# from slackbot.bot import respond_to  # @botname: で反応するデコーダ
+# from slackbot.bot import listen_to  # チャネル内発言で反応するデコーダ
+# from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
+from datetime import datetime
+from bs4 import BeautifulSoup
+
 
 import os
 import requests
@@ -13,18 +16,17 @@ import json
 import pprint
 import re
 import datetime
+import traceback
 from bs4 import BeautifulSoup
+
 
 client = WebClient(token=os.getenv("API_TOKEN"))
 
 API_KEY = "e2b220b4263af8d026cb5e44abd8f568"  # xxxに自分のAPI_Keyを入力。
 
 
-@listen_to("(.*)")
-def reply_weather(content, msg):
+def reply_weather(msg, channel):
     print("起動中")
-    if re.search("^天気|^傘", msg) is None:
-        return
 
     prefecture_set = {
         "東京": ("35.676192", "139.650311", "13"),
@@ -50,7 +52,7 @@ def reply_weather(content, msg):
             KASA_URL = f"http://www.drk7.jp/weather/xml/{prefecture_set[city][2]}.xml"
             break
     else:
-        content.reply("僕を呼ぶ時は[天気スペース首都圏]って入力してね！！！\n※都や県はいらないよッッ！！")
+        # content.reply("僕を呼ぶ時は[天気スペース首都圏]って入力してね！！！\n※都や県はいらないよッッ！！")
         return "success"
 
     if "傘" in msg:
@@ -90,7 +92,7 @@ def reply_weather(content, msg):
             syousai = f"\n\n{today_rain}\n\n朝昼晩に分けての降水確率は、\n{morning_rain}%\n{noon_rain}%\n{night_rain}%\n一日の降水量は{pre_day}mmです！！！"
 
             client.chat_postMessage(
-                channel=content.body["channel"],
+                channel=channel,
                 blocks=message_format(negirai, syousai),
                 username=u'晴男の叫ぶ天気bot',
                 icon_url="https://i.gyazo.com/601b4894e87c196c1296d1d0e2f92c51.png"
@@ -171,7 +173,7 @@ def reply_weather(content, msg):
             nakami = f"\n\n{now_year}年{now_month}月{now_day}日\n現在の{city}は{res_mark}！！！\n\n朝は{temp_morn}度！！！\n昼は{temp_day}度！！！！\n夜は{temp_night}度！！！！！\n\n{get_dress}"
 
             client.chat_postMessage(
-                channel=content.body["channel"],
+                channel=channel,
                 blocks=message_format(aisatu, nakami),
             )
 
